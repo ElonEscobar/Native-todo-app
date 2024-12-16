@@ -1,7 +1,7 @@
 export const Colors = {
   light: {
     text: 'black',
-    background: '#fff',
+    background: '#dff3ed',
     icon: '#000000',
     button: 'royalblue'
   },

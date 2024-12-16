@@ -7,30 +7,57 @@ import {
   FlatList,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { Poppins_400Regular, useFonts } from "@expo-google-fonts/poppins";
 import { ThemeContext } from "@/context/ThemeContext";
 import Octicons from "@expo/vector-icons/Octicons";
+import Animated, { LinearTransition } from "react-native-reanimated";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useRouter } from "expo-router";
+import { TodosData } from "@/constants/TodosData";
 
 export default function Index() {
-  const [todo, setTodo] = useState([
-    {
-      id: 1,
-      title: "some todo",
-      completed: false,
-    },
-    {
-      id: 2,
-      title: "some other todo",
-      completed: true,
-    },
-  ]);
+  const [todo, setTodo] = useState([]);
   const { colorScheme, setColorScheme, theme } = useContext(ThemeContext);
   const [text, setText] = useState("");
   const [loaded, error] = useFonts({
     Poppins_400Regular,
   });
+  const router = useRouter();
+
+  useEffect(() => {
+    try {
+      const getTodos = async () => {
+        const todos = await AsyncStorage.getItem("current-todos");
+        const storageTodos = todos != null ? JSON.parse(todos) : null;
+        if (storageTodos && storageTodos.length) {
+          setTodo(storageTodos.sort((a, b) => b.id - a.id));
+        } else {
+          setTodo(TodosData);
+        }
+      };
+      getTodos();
+    } catch (error) {
+      console.log(error);
+    }
+  }, [TodosData]);
+
+  // save todos to storage
+  useEffect(() => {
+    const saveTodos = async () => {
+      try {
+        const todos = await AsyncStorage.setItem(
+          "current-todos",
+          JSON.stringify(todo)
+        );
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    saveTodos();
+  }, [todo]);
+
   // ensure styles are loaded
   if (!loaded && !error) {
     return null;
@@ -56,14 +83,20 @@ export default function Index() {
     setTodo(todo.filter((e) => e.id !== id));
   };
 
+  const handlePress = (id) => {
+    router.push(`/todos/${id}`)
+  };
+
   const renderItem = ({ item }) => (
     <View style={styles.todoItem}>
-      <Text
-        style={[styles.todoText, item.completed && styles.completedText]}
-        onPress={() => toggle(item.id)}
+      <Pressable
+        onPress={() => handlePress(item.id)}
+        onLongPress={() => toggle(item.id)}
       >
-        {item.title}
-      </Text>
+        <Text style={[styles.todoText, item.completed && styles.completedText]}>
+          {item.title}
+        </Text>
+      </Pressable>
       <Pressable onPress={() => removeTodo(item.id)}>
         <MaterialCommunityIcons
           name="delete-circle"
@@ -79,6 +112,7 @@ export default function Index() {
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
+          maxLength={30}
           placeholder="Enter new todo"
           placeholderTextColor="gray"
           value={text}
@@ -115,11 +149,13 @@ export default function Index() {
         </Pressable>
       </View>
 
-      <FlatList
+      <Animated.FlatList
         data={todo}
         renderItem={renderItem}
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={{ flexGrow: 1 }}
+        keyboardDismissMode="on-drag"
+        itemLayoutAnimation={LinearTransition}
       />
     </SafeAreaView>
   );
@@ -159,7 +195,7 @@ function createStyles(theme, colorScheme) {
     },
     btnText: {
       fontSize: 18,
-      color: colorScheme === 'dark' ? 'black' : 'white',
+      color: colorScheme === "dark" ? "black" : "white",
       fontWeight: "bold",
     },
     todoItem: {

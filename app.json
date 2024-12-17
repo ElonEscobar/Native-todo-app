@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "crudApp",
-    "slug": "crudApp",
+    "name": "Todo List",
+    "slug": "todo-list",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -13,10 +13,10 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.dan89.crudApp"
+      "package": "com.dan89.todolist"
     },
     "web": {
       "bundler": "metro",
@@ -43,7 +43,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "fa32a79e-a073-41cf-9e59-2584bfcb21cf"
+        "projectId": "5316a965-47e8-42a0-8544-5040069cfcaf"
       }
     },
     "owner": "dan89"

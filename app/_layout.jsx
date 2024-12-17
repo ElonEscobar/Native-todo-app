@@ -22,7 +22,7 @@ export default function RootLayout() {
             name="index"
             options={{
               title: "My Todos",
-              headerStyle: { backgroundColor: "	#bbbbbb" },
+              headerStyle: { backgroundColor: "	#cccccc" },
               headerTitleAlign: "center",
               headerRight: () => <QuestionMarkIcon />,
             }}
@@ -32,7 +32,7 @@ export default function RootLayout() {
             options={{
               title: "Edit Todo",
               headerTitleAlign: "center",
-              headerStyle: { backgroundColor: "	#bbbbbb" },
+              headerStyle: { backgroundColor: "	#cccccc" },
             }}
           />
         </Stack>

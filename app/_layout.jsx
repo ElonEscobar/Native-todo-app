@@ -23,6 +23,7 @@ export default function RootLayout() {
             options={{
               title: "My Todos",
               headerStyle: { backgroundColor: "	#cccccc" },
+              headerTintColor: '#ffffff',
               headerTitleAlign: "center",
               headerRight: () => <QuestionMarkIcon />,
             }}
@@ -31,6 +32,7 @@ export default function RootLayout() {
             name="todos/[id]"
             options={{
               title: "Edit Todo",
+              headerTintColor: '#ffffff',
               headerTitleAlign: "center",
               headerStyle: { backgroundColor: "	#cccccc" },
             }}
